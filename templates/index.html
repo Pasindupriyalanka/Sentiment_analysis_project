@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='model/css/main.css') }}">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    
+    <title>Sentiment Analysis App</title>
+</head>
+<body>
+
+   <div class="split left">
+        <div class="centered">
+            <img src="{{ url_for('static', filename='model/product/1.jpg') }}" alt="Product Image">
+        </div>
+   </div> 
+
+   <div class="split right">
+        <div class="container mt-5 mb-5">
+            <div class="d-flex justify-content-center row">
+                <div class="d-flex flex-column col-md-8">
+                    
+                    <div class="mb-2">
+                        <label for="">Positive Reviews : {{ data.positive }}</label>
+                    </div>
+                    <div class="mb-4">
+                        <label for="">Negative Reviews : {{ data.negative }}</label>
+                    </div>
+
+                    <form method="post">
+                        <div class="form-group">
+                            <textarea name="text" class="form-control" rows="4" placeholder="Type your review here..."></textarea>
+                        </div>
+                        <input type="submit" class="btn btn-primary" value="Submit">
+                    </form>
+
+                    <div class="coment-bottom bg-white p-2 px-4 mt-4 border rounded">
+                        {% for review in data.reviews %}
+                        <hr>
+                        <div>
+                            <div class="commented-section mt-2">
+                                <div class="d-flex flex-row align-items-center commented-user">
+                                    </div>
+                                <div class="text-nowrap bd-highlight">
+                                    <span>{{ review }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+   </div>
+
+</body>
+</html>
