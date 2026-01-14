@@ -9,6 +9,7 @@ babel==2.17.0
 beautifulsoup4==4.14.3
 black==25.12.0
 bleach==6.3.0
+blinker==1.9.0
 certifi==2025.11.12
 cffi==2.0.0
 charset-normalizer==3.4.4
@@ -22,6 +23,7 @@ decorator==5.2.1
 defusedxml==0.7.1
 executing==2.2.1
 fastjsonschema==2.21.2
+Flask==3.1.2
 fonttools==4.61.1
 fqdn==1.5.1
 h11==0.16.0
@@ -34,6 +36,7 @@ ipython==9.8.0
 ipython_pygments_lexers==1.1.1
 ipywidgets==8.1.8
 isoduration==20.11.0
+itsdangerous==2.2.0
 jedi==0.19.2
 Jinja2==3.1.6
 joblib==1.5.3
@@ -92,7 +95,6 @@ python-json-logger==4.0.0
 python-slugify==8.0.4
 pytokens==0.3.0
 pytz==2025.2
-pywinpty==3.0.2
 PyYAML==6.0.3
 pyzmq==27.1.0
 referencing==0.37.0
@@ -127,4 +129,5 @@ wcwidth==0.2.14
 webcolors==25.10.0
 webencodings==0.5.1
 websocket-client==1.9.0
+Werkzeug==3.1.5
 widgetsnbextension==4.0.15
