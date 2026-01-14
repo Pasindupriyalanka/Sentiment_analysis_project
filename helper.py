@@ -2,20 +2,53 @@ import numpy as np
 import pandas as pd
 import re
 import string
+from pathlib import Path
 import pickle
-
-
 
 from nltk.stem import PorterStemmer
 ps = PorterStemmer()
 
-with open('static/model/product/model.pickle', 'rb') as f:
+BASE_DIR = Path(__file__).resolve().parent
+
+def _find_existing(base: Path, candidates):
+    for p in candidates:
+        candidate = base / p
+        if candidate.exists():
+            return candidate
+    return None
+
+candidates = [
+    BASE_DIR / 'static' / 'model' / 'model.pickle',
+    BASE_DIR / 'static' / 'model' / 'modle.pickle',  # accept the typo
+    BASE_DIR / 'static' / 'model' / 'product' / 'model.pickle'
+]
+model_path = next((p for p in candidates if p.exists()), None)
+if model_path is None:
+    tried = ", ".join(str(p) for p in candidates)
+    raise FileNotFoundError(f"Model file not found. Tried: {tried}")
+with model_path.open('rb') as f:
     model = pickle.load(f)
 
-with open('static/model/corpora/stopwords/english', 'r') as file:
-    sw = file.read().splitlines()
+# stopwords
+sw_candidates = [
+    Path('static') / 'model' / 'corpora' / 'stopwords' / 'english',
+    Path('static') / 'model' / 'corpora' / 'stopwords' / 'english.txt'
+]
+sw_path = _find_existing(BASE_DIR, sw_candidates)
+if sw_path is None:
+    sw = []  # fallback; or use nltk.corpus.stopwords if available
+else:
+    sw = sw_path.read_text().splitlines()
 
-vocab = pd.read_csv('static/model/vocabulary.txt', header=None)
+# vocabulary
+vocab_candidates = [
+    Path('static') / 'model' / 'vocabulary.txt',
+    Path('model') / 'vocabulary.txt'
+]
+vocab_path = _find_existing(BASE_DIR, vocab_candidates)
+if vocab_path is None:
+    raise FileNotFoundError(f"vocabulary.txt not found. Tried: {', '.join(str(BASE_DIR / p) for p in vocab_candidates)}")
+vocab = pd.read_csv(vocab_path, header=None)
 tokens = vocab[0].tolist()
 
 def remove_punctuations(text):
@@ -28,7 +61,7 @@ def preprocessing(text):
      data["tweet"] = data["tweet"].apply(lambda x: " ".join(x.lower() for x in x.split()))
      data["tweet"] = data["tweet"].apply(lambda x: " ".join(re.sub(r'^https?:\/\/.*[\r\n]*', '', x, flags=re.MULTILINE).split()))
      data["tweet"] = data["tweet"].apply(remove_punctuations)
-     data["tweet"] = data["tweet"].str.replace('\d+', '', regex=True)
+     data["tweet"] = data["tweet"].str.replace(r'\d+', '', regex=True)
      data["tweet"] = data["tweet"].apply(lambda x: " ".join(x for x in x.split() if x not in sw))
      data["tweet"] = data["tweet"].apply(lambda x: " ".join(ps.stem(x) for x in x.split()))
      return data["tweet"]
